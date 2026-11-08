@@ -15,12 +15,8 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = "PMDM"
 
-    // LISTA DE LÍNEAS (MUTABLE PARA PODER AÑADIR MÁS)
-    private val lineas = mutableListOf(
-        Linea(1, "M-163", "Sevilla – Hospital San Juan"),
-        Linea(2, "M-160", "Sevilla – Camas"),
-        Linea(3, "M-140", "Sevilla – Santiponce")
-    )
+    // LISTA QUE SE VE EN PANTALLA: EMPIEZA VACÍA Y SE RELLENA DESDE EL ALMACÉN
+    private val lineas = mutableListOf<Linea>()
 
     // ADAPTADOR: CONVIERTE CADA LÍNEA EN UNA FILA (SE CREA EN onCreate)
     private lateinit var adapter: ArrayAdapter<Linea>
@@ -34,13 +30,9 @@ class MainActivity : AppCompatActivity() {
             val codigo = resultado.data?.getStringExtra(FormularioActivity.EXTRA_CODIGO).orEmpty()
             val recorrido = resultado.data?.getStringExtra(FormularioActivity.EXTRA_RECORRIDO).orEmpty()
 
-            // ID NUEVO = EL MAYOR QUE HAYA + 1
-            val nuevoId = (lineas.maxOfOrNull { it.id } ?: 0) + 1
-
-            // AÑADIR A LA LISTA Y AVISAR AL ADAPTADOR PARA QUE SE VEA
-            lineas.add(Linea(nuevoId, codigo, recorrido))
-            adapter.notifyDataSetChanged()
-            Log.d(TAG, "Línea añadida: $codigo (id $nuevoId)")
+            // GUARDAR EN EL ALMACÉN (EL ID NUEVO LO CALCULA EL ALMACÉN)
+            AlmacenLineas.agregar(this, codigo, recorrido)
+            Log.d(TAG, "Línea guardada en el almacén: $codigo")
         } else {
             Log.d(TAG, "Formulario cancelado")
         }
@@ -98,6 +90,14 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Mostrando ayuda")
     }
 
+    // RECARGAR: LEE LAS LÍNEAS DEL ALMACÉN Y ACTUALIZA LA LISTA DE LA PANTALLA
+    private fun recargarLista() {
+        lineas.clear()                                 // 1. VACIAR LA LISTA DE LA PANTALLA
+        lineas.addAll(AlmacenLineas.leer(this))        // 2. LLENARLA CON LO GUARDADO
+        adapter.notifyDataSetChanged()                 // 3. AVISAR AL ADAPTADOR PARA QUE SE REDIBUJE
+        Log.d(TAG, "Lista recargada: ${lineas.size} líneas")
+    }
+
     //CICLO DE VIDA
 
     override fun onStart() {
@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "La app está en primer plano")
+        recargarLista() // CADA VEZ QUE VOLVEMOS A ESTA PANTALLA, LEER LO GUARDADO
     }
 
     override fun onPause() {
