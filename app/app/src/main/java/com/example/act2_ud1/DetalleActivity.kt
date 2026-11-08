@@ -6,22 +6,23 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import android.content.Intent
 
 class DetalleActivity : AppCompatActivity() {
 
-    // 🆕 ETIQUETA DEL DATO QUE LLEGA EN EL INTENT: SOLO EL ID
+    // ETIQUETA DEL DATO QUE LLEGA EN EL INTENT: SOLO EL ID
     companion object {
         const val EXTRA_ID = "extra_id"
     }
 
-    // 🆕 ID DE LA LÍNEA QUE SE ESTÁ VIENDO (-1 = NINGUNA)
+    // ID DE LA LÍNEA QUE SE ESTÁ VIENDO (-1 = NINGUNA)
     private var idLinea = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalle)
 
-        // 1. 🆕 RECOGER EL ID DEL INTENT (SI NO LLEGA, -1)
+        // 1. RECOGER EL ID DEL INTENT (SI NO LLEGA, -1)
         idLinea = intent.getIntExtra(EXTRA_ID, -1)
 
         // 2. VOLVER A LA LISTA (CIERRA ESTA PANTALLA)
@@ -32,15 +33,21 @@ class DetalleActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnBorrar).setOnClickListener {
             confirmarBorrado()
         }
+        // 4. EDITAR: ABRIR EL FORMULARIO EN MODO EDICIÓN CON EL ID DE ESTA LÍNEA
+        findViewById<Button>(R.id.btnEditar).setOnClickListener {
+            val intent = Intent(this, FormularioActivity::class.java)
+            intent.putExtra(FormularioActivity.EXTRA_ID_EDITAR, idLinea)
+            startActivity(intent)
+        }
     }
 
-    // 🆕 CADA VEZ QUE LA PANTALLA VUELVE A VERSE, PINTAR LOS DATOS ACTUALES
+    // ADA VEZ QUE LA PANTALLA VUELVE A VERSE, PINTAR LOS DATOS ACTUALES
     override fun onResume() {
         super.onResume()
         mostrarLinea()
     }
 
-    // 🆕 MOSTRAR: BUSCA LA LÍNEA EN EL ALMACÉN Y PINTA SUS DATOS
+    //MOSTRAR: BUSCA LA LÍNEA EN EL ALMACÉN Y PINTA SUS DATOS
     private fun mostrarLinea() {
         val linea = AlmacenLineas.buscar(this, idLinea)
 
