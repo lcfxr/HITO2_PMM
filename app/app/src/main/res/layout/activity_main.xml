@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PANTALLA DE LA LISTA -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    android:fitsSystemWindows="true">
+
+
+    <!-- TITULO -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titulo_listado"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- LISTA DE LA LINEA -->
+    <ListView
+        android:id="@+id/lvLineas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- BOTON PARA ABRIR FORMULARIO -->
+    <Button
+        android:id="@+id/btnAnadir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_anadir"/>
+
+    <!-- BOTON OPCIONES -->
+    <Button
+        android:id="@+id/btnOpciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_opciones"
+        style="@style/Widget.Material3.Button.OutlinedButton"/>
+
+</LinearLayout>

@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">TUPESA</string>
+    <string name="mensaje_inicial">Bienvenido a TUPESA</string>
+    <string name="accion_boton">Registrar ruta</string>
+    <string name="mensaje_actualizado">¡RUTA REGISTRADA!</string>
+
+    <!-- PARA AÑADIR LAS LISTAS -->
+    <string name="titulo_listado">Líneas de autobús</string>
+    <string name="btn_anadir">Añadir línea</string>
+
+    <!-- DETALLE -->
+    <string name="titulo_detalle">Detalle de la línea</string>
+    <string name="etiqueta_codigo">Código:</string>
+    <string name="etiqueta_recorrido">Recorrido:</string>
+    <string name="btn_volver">Volver</string>
+
+    <!-- FORMULARIO -->
+    <string name="titulo_formulario">Nueva línea</string>
+    <string name="hint_codigo">Ej: M-111</string>
+    <string name="hint_recorrido">Ej: Sevilla – Bormujos</string>
+    <string name="btn_guardar">Guardar</string>
+    <string name="btn_cancelar">Cancelar</string>
+
+    <!-- ERRORES -->
+    <string name="error_codigo_corto">El código debe tener al menos 2 caracteres</string>
+    <string name="error_recorrido_vacio">El recorrido es obligatorio</string>
+
+    <!-- OPCIONES Y AYUDA -->
+    <string name="btn_opciones">Opciones</string>
+    <string name="menu_ayuda">Ayuda</string>
+    <string name="titulo_ayuda">Cómo usar TUPESA</string>
+    <string name="texto_ayuda">• Toca una línea para ver su recorrido.\n\n• Pulsa «Añadir línea» para crear una nueva. El código necesita al menos 2 caracteres y el recorrido es obligatorio.\n\n• En el detalle, pulsa «Volver» para regresar a la lista.</string>
+    <string name="btn_entendido">Entendido</string>
+
+    <!-- BIENVENIDA -->
+    <string name="btn_ver_lineas">Ver líneas</string>
+</resources>

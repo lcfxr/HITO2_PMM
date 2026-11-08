@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PANTALLA DE BIENVENIDA (LA DE H1): TEXTO CENTRADO Y BOTÓN PARA IR AL LISTADO -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="16dp"
+    android:fitsSystemWindows="true">
+
+    <!-- MENSAJE DE BIENVENIDA -->
+    <TextView
+        android:id="@+id/mensaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mensaje_inicial"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- BOTÓN PARA IR AL LISTADO -->
+    <Button
+        android:id="@+id/btnVerLineas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_ver_lineas"/>
+
+</LinearLayout>
