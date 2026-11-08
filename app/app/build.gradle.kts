@@ -12,8 +12,8 @@ android {
         applicationId = "es.iespoligonosur.tupesa"
         minSdk = 24
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2           // NÚMERO INTERNO: SIEMPRE SUBE (1 → 2 → 3...)
+        versionName = "2.0"       // VERSIÓN QUE VE EL USUARIO: H2 CON PERSISTENCIA, HTTPS Y UBICACIÓN
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
