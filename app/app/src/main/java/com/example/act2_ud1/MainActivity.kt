@@ -102,6 +102,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnConsorcio).setOnClickListener {
             startActivity(Intent(this, ConsorcioActivity::class.java))
         }
+
+        // 7. BOTÓN PARADA MÁS CERCANA: ABRIR LA PANTALLA DE UBICACIÓN
+        findViewById<Button>(R.id.btnCerca).setOnClickListener {
+            startActivity(Intent(this, CercaActivity::class.java))
+        }
     }
 
     // VENTANA DE AYUDA: EXPLICA CÓMO USAR LA LISTA

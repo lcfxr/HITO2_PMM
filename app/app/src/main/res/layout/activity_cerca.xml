@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PANTALLA PARADA MÁS CERCANA: PIDE PERMISO DE UBICACIÓN Y CALCULA LA PARADA -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    android:fitsSystemWindows="true">
+
+    <!-- TÍTULO -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titulo_cerca"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- EXPLICACIÓN (TRANSPARENCIA: PARA QUÉ SE USA LA UBICACIÓN) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/texto_cerca"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- BOTÓN PRINCIPAL -->
+    <Button
+        android:id="@+id/btnBuscarParada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_buscar_parada"/>
+
+    <!-- RESULTADO O MENSAJE (PARADA / SIN PERMISO / BLOQUEADO / UBICACIÓN APAGADA) -->
+    <TextView
+        android:id="@+id/tvResultado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:padding="16dp"
+        android:visibility="gone"/>
+
+    <!-- ABRIR AJUSTES: SOLO SI EL PERMISO ESTÁ BLOQUEADO -->
+    <Button
+        android:id="@+id/btnAbrirAjustes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/btn_abrir_ajustes"
+        android:visibility="gone"/>
+
+    <!-- HUECO QUE EMPUJA EL BOTÓN VOLVER ABAJO -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- VOLVER -->
+    <Button
+        android:id="@+id/btnVolverCerca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_volver"/>
+
+</LinearLayout>

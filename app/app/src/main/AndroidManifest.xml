@@ -8,6 +8,12 @@
     <!-- PERMISO PARA SABER SI HAY CONEXIÓN (WIFI O DATOS) ANTES DE DESCARGAR -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- PERMISOS DE UBICACIÓN (PELIGROSOS: ADEMÁS HAY QUE PEDIRLOS AL USUARIO EN EL CÓDIGO) -->
+    <!-- APROXIMADA: UNOS CIENTOS DE METROS (WIFI Y ANTENAS) -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- PRECISA: UNOS METROS (GPS) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -47,6 +53,11 @@
         <!-- LÍNEAS DEL CONSORCIO (CONSULTA HTTPS) -->
         <activity
             android:name=".ConsorcioActivity"
+            android:exported="false" />
+
+        <!-- PARADA MÁS CERCANA (UBICACIÓN + PERMISO) -->
+        <activity
+            android:name=".CercaActivity"
             android:exported="false" />
 
     </application>

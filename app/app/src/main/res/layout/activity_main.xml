@@ -48,4 +48,12 @@
         android:text="@string/btn_consorcio"
         style="@style/Widget.Material3.Button.TonalButton"/>
 
+    <!-- BOTON PARA ABRIR LA PARADA MÁS CERCANA (UBICACIÓN) -->
+    <Button
+        android:id="@+id/btnCerca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_cerca"
+        style="@style/Widget.Material3.Button.TonalButton"/>
+
 </LinearLayout>

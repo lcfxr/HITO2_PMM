@@ -55,4 +55,20 @@
     <string name="estado_vacio">No hay líneas que pasen por «%1$s»</string>
     <string name="error_sin_conexion">Sin conexión. Activa el wifi o los datos y vuelve a intentarlo.</string>
     <string name="error_descarga">No se han podido descargar las líneas (%1$s)</string>
+
+    <!-- PARADA MÁS CERCANA (UBICACIÓN + PERMISO) -->
+    <string name="btn_cerca">Parada más cercana</string>
+    <string name="titulo_cerca">Parada más cercana</string>
+    <string name="texto_cerca">Usa tu ubicación para decirte qué parada de bus tienes más cerca. Tu ubicación no se guarda ni se muestra.</string>
+    <string name="btn_buscar_parada">Buscar mi parada</string>
+    <string name="btn_abrir_ajustes">Abrir ajustes</string>
+    <string name="cerca_buscando">Buscando tu ubicación…</string>
+    <string name="cerca_resultado">Tu parada más cercana es:\n\n%1$s\n\na %2$s</string>
+    <string name="cerca_sin_permiso">Sin permiso de ubicación no puedo buscar tu parada. El resto de la app funciona igual.</string>
+    <string name="cerca_permiso_bloqueado">Has bloqueado el permiso de ubicación. Si quieres usar esta función, actívalo en Ajustes → Permisos → Ubicación.</string>
+    <string name="cerca_ubicacion_apagada">La ubicación del móvil está desactivada. Actívala y vuelve a intentarlo.</string>
+    <string name="cerca_sin_ubicacion">No se ha podido obtener tu ubicación. Inténtalo de nuevo.</string>
+    <string name="titulo_explicacion_permiso">¿Para qué quiero tu ubicación?</string>
+    <string name="texto_explicacion_permiso">Solo para calcular qué parada tienes más cerca. No se guarda, no se envía a internet y no se muestra en pantalla.</string>
+    <string name="btn_continuar">Continuar</string>
 </resources>
