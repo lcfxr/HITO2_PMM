@@ -43,4 +43,16 @@
 
     <!-- BIENVENIDA -->
     <string name="btn_ver_lineas">Ver líneas</string>
+
+    <!-- CONSORCIO (CONSULTA HTTPS) -->
+    <string name="btn_consorcio">Líneas del Consorcio</string>
+    <string name="titulo_consorcio">Líneas del Consorcio</string>
+    <string name="fuente_consorcio">Datos reales: Consorcio de Transportes del Área de Sevilla</string>
+    <string name="hint_buscar">Pueblo o línea (ej: Camas)</string>
+    <string name="btn_buscar">Buscar</string>
+    <string name="btn_reintentar">Reintentar</string>
+    <string name="estado_cargando">Cargando líneas…</string>
+    <string name="estado_vacio">No hay líneas que pasen por «%1$s»</string>
+    <string name="error_sin_conexion">Sin conexión. Activa el wifi o los datos y vuelve a intentarlo.</string>
+    <string name="error_descarga">No se han podido descargar las líneas (%1$s)</string>
 </resources>

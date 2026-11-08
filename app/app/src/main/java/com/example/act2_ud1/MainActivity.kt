@@ -97,6 +97,11 @@ class MainActivity : AppCompatActivity() {
             }
             menu.show()
         }
+
+        // 6. BOTÓN CONSORCIO: ABRIR LA PANTALLA DE LÍNEAS REALES (CONSULTA HTTPS)
+        findViewById<Button>(R.id.btnConsorcio).setOnClickListener {
+            startActivity(Intent(this, ConsorcioActivity::class.java))
+        }
     }
 
     // VENTANA DE AYUDA: EXPLICA CÓMO USAR LA LISTA

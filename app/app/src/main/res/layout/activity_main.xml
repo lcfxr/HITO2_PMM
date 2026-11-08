@@ -40,4 +40,12 @@
         android:text="@string/btn_opciones"
         style="@style/Widget.Material3.Button.OutlinedButton"/>
 
+    <!-- BOTON PARA ABRIR LAS LÍNEAS REALES DEL CONSORCIO -->
+    <Button
+        android:id="@+id/btnConsorcio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_consorcio"
+        style="@style/Widget.Material3.Button.TonalButton"/>
+
 </LinearLayout>

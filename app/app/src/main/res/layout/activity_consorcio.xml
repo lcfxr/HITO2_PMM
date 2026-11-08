@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PANTALLA DEL CONSORCIO: BUSCA LÍNEAS REALES POR HTTPS -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="16dp"
+    android:fitsSystemWindows="true">
+
+    <!-- TÍTULO Y FUENTE DE LOS DATOS -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titulo_consorcio"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fuente_consorcio"
+        android:textSize="12sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- BUSCADOR -->
+    <EditText
+        android:id="@+id/etBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_buscar"
+        android:inputType="text"
+        android:imeOptions="actionSearch"/>
+
+    <Button
+        android:id="@+id/btnBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_buscar"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- ESTADO CARGANDO: CÍRCULO QUE GIRA (ESCONDIDO AL PRINCIPIO) -->
+    <ProgressBar
+        android:id="@+id/pbCargando"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
+
+    <!-- MENSAJE DE ESTADO: CARGANDO / VACÍO / ERROR (ESCONDIDO AL PRINCIPIO) -->
+    <TextView
+        android:id="@+id/tvEstado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:visibility="gone"/>
+
+    <!-- BOTÓN REINTENTAR: SOLO EN ESTADO ERROR (ESCONDIDO AL PRINCIPIO) -->
+    <Button
+        android:id="@+id/btnReintentar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/btn_reintentar"
+        android:visibility="gone"/>
+
+    <!-- LISTA DE RESULTADOS: OCUPA EL ESPACIO QUE QUEDA -->
+    <ListView
+        android:id="@+id/lvConsorcio"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- VOLVER A MIS LÍNEAS -->
+    <Button
+        android:id="@+id/btnVolverConsorcio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_volver"/>
+
+</LinearLayout>
