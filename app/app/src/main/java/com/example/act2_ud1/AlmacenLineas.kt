@@ -43,6 +43,28 @@ object AlmacenLineas {
         guardar(contexto, lineas)
     }
 
+    // BUSCAR: DEVUELVE LA LÍNEA CON ESE ID (O null SI NO EXISTE)
+    fun buscar(contexto: Context, id: Int): Linea? {
+        return leer(contexto).find { it.id == id }
+    }
+
+    // EDITAR: CAMBIA EL CÓDIGO Y EL RECORRIDO DE LA LÍNEA CON ESE ID Y GUARDA
+    fun editar(contexto: Context, id: Int, codigo: String, recorrido: String) {
+        val lineas = leer(contexto)
+        val posicion = lineas.indexOfFirst { it.id == id }   // POSICIÓN EN LA LISTA (-1 SI NO ESTÁ)
+        if (posicion != -1) {
+            lineas[posicion] = Linea(id, codigo, recorrido)   // MISMO ID, DATOS NUEVOS
+            guardar(contexto, lineas)
+        }
+    }
+
+    // BORRAR: QUITA LA LÍNEA CON ESE ID Y GUARDA
+    fun borrar(contexto: Context, id: Int) {
+        val lineas = leer(contexto)
+        lineas.removeAll { it.id == id }                     // QUITA LA QUE TENGA ESE ID
+        guardar(contexto, lineas)
+    }
+
     // GUARDAR: CONVIERTE LA LISTA EN TEXTO JSON
     private fun guardar(contexto: Context, lineas: List<Linea>) {
         val array = JSONArray()

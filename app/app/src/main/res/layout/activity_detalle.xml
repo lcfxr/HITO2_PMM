@@ -46,6 +46,20 @@
         android:textSize="20sp"
         android:layout_marginBottom="32dp"/>
 
+    <!-- BOTÓN EDITAR (SE PROGRAMA EN EL PASO 2.4) -->
+    <Button
+        android:id="@+id/btnEditar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_editar"/>
+
+    <!-- BOTÓN BORRAR -->
+    <Button
+        android:id="@+id/btnBorrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_borrar"/>
+
     <!-- BOTON PARA VOLVER -->
     <Button
         android:id="@+id/btnVolver"

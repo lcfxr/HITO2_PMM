@@ -6,16 +6,19 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
 
 class FormularioActivity : AppCompatActivity() {
 
     private val TAG = "PMDM"
 
-    // ETIQUETAS DE LOS DATOS QUE SE DEVUELVEN A LA LISTA
+    // ETIQUETA DEL DATO QUE LLEGA: EL ID DE LA LÍNEA A EDITAR (SI NO LLEGA = MODO ALTA)
     companion object {
-        const val EXTRA_CODIGO = "extra_codigo_nuevo"
-        const val EXTRA_RECORRIDO = "extra_recorrido_nuevo"
+        const val EXTRA_ID_EDITAR = "extra_id_editar"
     }
+
+    // ID DE LA LÍNEA QUE SE EDITA (-1 = MODO ALTA, LÍNEA NUEVA)
+    private var idEditar = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,17 @@ class FormularioActivity : AppCompatActivity() {
         val etRecorrido = findViewById<EditText>(R.id.etRecorrido)
         val btnGuardar = findViewById<Button>(R.id.btnGuardar)
         val btnCancelar = findViewById<Button>(R.id.btnCancelar)
+        // 1.1 MODO EDICIÓN: SI LLEGA UN ID, CAMBIAR EL TÍTULO Y RELLENAR LOS CAMPOS
+        idEditar = intent.getIntExtra(EXTRA_ID_EDITAR, -1)
+        if (idEditar != -1) {
+            findViewById<TextView>(R.id.tvTituloFormulario).setText(R.string.titulo_editar)
+            val linea = AlmacenLineas.buscar(this, idEditar)
+            // SOLO LA PRIMERA VEZ: AL GIRAR LA PANTALLA, LOS EditText YA CONSERVAN LO ESCRITO
+            if (linea != null && savedInstanceState == null) {
+                etCodigo.setText(linea.codigo)
+                etRecorrido.setText(linea.recorrido)
+            }
+        }
 
         // 2. GUARDAR
         btnGuardar.setOnClickListener {
@@ -53,12 +67,14 @@ class FormularioActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // 2.4 TODO CORRECTO: DEVOLVER LOS DATOS A LA LISTA Y CERRAR
-            val resultado = Intent()
-            resultado.putExtra(EXTRA_CODIGO, codigo)
-            resultado.putExtra(EXTRA_RECORRIDO, recorrido)
-            setResult(RESULT_OK, resultado)
-            Log.d(TAG, "Línea válida, se devuelve: $codigo")
+            // 2.4 TODO CORRECTO: GUARDAR EN EL ALMACÉN (EDITAR O AÑADIR) Y CERRAR
+            if (idEditar != -1) {
+                AlmacenLineas.editar(this, idEditar, codigo, recorrido)   // MODO EDICIÓN
+            } else {
+                AlmacenLineas.agregar(this, codigo, recorrido)            // MODO ALTA
+            }
+            setResult(RESULT_OK)   // AVISAR A QUIEN ME ABRIÓ DE QUE SE HA GUARDADO
+            Log.d(TAG, "Línea guardada: $codigo")
             finish()
         }
 

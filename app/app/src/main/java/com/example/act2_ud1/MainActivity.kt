@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,13 +27,9 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { resultado ->
         if (resultado.resultCode == RESULT_OK) {
-            // RECOGER LOS DATOS QUE DEVUELVE EL FORMULARIO
-            val codigo = resultado.data?.getStringExtra(FormularioActivity.EXTRA_CODIGO).orEmpty()
-            val recorrido = resultado.data?.getStringExtra(FormularioActivity.EXTRA_RECORRIDO).orEmpty()
-
-            // GUARDAR EN EL ALMACÉN (EL ID NUEVO LO CALCULA EL ALMACÉN)
-            AlmacenLineas.agregar(this, codigo, recorrido)
-            Log.d(TAG, "Línea guardada en el almacén: $codigo")
+            // EL FORMULARIO YA HA VALIDADO Y GUARDADO: SOLO AVISAMOS AL USUARIO
+            Toast.makeText(this, R.string.linea_guardada, Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "El formulario ha guardado una línea")
         } else {
             Log.d(TAG, "Formulario cancelado")
         }
@@ -57,8 +54,7 @@ class MainActivity : AppCompatActivity() {
         lvLineas.setOnItemClickListener { _, _, position, _ ->
             val linea = lineas[position]
             val intent = Intent(this, DetalleActivity::class.java)
-            intent.putExtra(DetalleActivity.EXTRA_CODIGO, linea.codigo)
-            intent.putExtra(DetalleActivity.EXTRA_RECORRIDO, linea.recorrido)
+            intent.putExtra(DetalleActivity.EXTRA_ID, linea.id) // SOLO EL ID: EL DETALLE BUSCA LA LÍNEA EN EL ALMACÉN
             Log.d(TAG, "Abriendo detalle de ${linea.codigo}")
             startActivity(intent)
         }

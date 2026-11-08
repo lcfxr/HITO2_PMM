@@ -13,9 +13,16 @@
     <string name="etiqueta_codigo">Código:</string>
     <string name="etiqueta_recorrido">Recorrido:</string>
     <string name="btn_volver">Volver</string>
+    <string name="btn_editar">Editar</string>
+    <string name="btn_borrar">Borrar</string>
+    <string name="titulo_confirmar_borrar">¿Borrar la línea?</string>
+    <string name="texto_confirmar_borrar">Se borrará la línea %1$s. No se puede deshacer.</string>
+    <string name="linea_borrada">Línea borrada</string>
 
     <!-- FORMULARIO -->
     <string name="titulo_formulario">Nueva línea</string>
+    <string name="titulo_editar">Editar línea</string>
+    <string name="linea_guardada">Línea guardada</string>
     <string name="hint_codigo">Ej: M-111</string>
     <string name="hint_recorrido">Ej: Sevilla – Bormujos</string>
     <string name="btn_guardar">Guardar</string>
