@@ -35,6 +35,8 @@
     <!-- OPCIONES Y AYUDA -->
     <string name="btn_opciones">Opciones</string>
     <string name="menu_ayuda">Ayuda</string>
+    <string name="menu_ordenar_codigo">Ordenar por código</string>
+    <string name="menu_ordenar_recorrido">Ordenar por recorrido</string>
     <string name="titulo_ayuda">Cómo usar TUPESA</string>
     <string name="texto_ayuda">• Toca una línea para ver su recorrido.\n\n• Pulsa «Añadir línea» para crear una nueva. El código necesita al menos 2 caracteres y el recorrido es obligatorio.\n\n• En el detalle, pulsa «Volver» para regresar a la lista.</string>
     <string name="btn_entendido">Entendido</string>

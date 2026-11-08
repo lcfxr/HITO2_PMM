@@ -16,6 +16,11 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = "PMDM"
 
+    // IDS DE LAS OPCIONES DEL MENÚ (PARA SABER CUÁL SE HA PULSADO)
+    private val MENU_ORDEN_CODIGO = 1
+    private val MENU_ORDEN_RECORRIDO = 2
+    private val MENU_AYUDA = 3
+
     // LISTA QUE SE VE EN PANTALLA: EMPIEZA VACÍA Y SE RELLENA DESDE EL ALMACÉN
     private val lineas = mutableListOf<Linea>()
 
@@ -64,12 +69,30 @@ class MainActivity : AppCompatActivity() {
             lanzadorFormulario.launch(Intent(this, FormularioActivity::class.java))
         }
 
-        // 5. BOTÓN OPCIONES: MENÚ CON LA ACCIÓN AYUDA
+        // 5. BOTÓN OPCIONES: MENÚ CON ORDENAR Y AYUDA
         btnOpciones.setOnClickListener { boton ->
             val menu = PopupMenu(this, boton)
-            menu.menu.add(getString(R.string.menu_ayuda))
-            menu.setOnMenuItemClickListener {
-                mostrarAyuda()
+            val ordenActual = Ajustes.leerOrden(this)
+
+            // 5.1 OPCIONES DE ORDEN: SE MARCA CON ✓ LA QUE ESTÁ ELEGIDA
+            val opCodigo = menu.menu.add(0, MENU_ORDEN_CODIGO, 0, R.string.menu_ordenar_codigo)
+            opCodigo.isCheckable = true
+            opCodigo.isChecked = (ordenActual == Ajustes.ORDEN_CODIGO)
+
+            val opRecorrido = menu.menu.add(0, MENU_ORDEN_RECORRIDO, 1, R.string.menu_ordenar_recorrido)
+            opRecorrido.isCheckable = true
+            opRecorrido.isChecked = (ordenActual == Ajustes.ORDEN_RECORRIDO)
+
+            // 5.2 OPCIÓN DE AYUDA (LA DE SIEMPRE)
+            menu.menu.add(0, MENU_AYUDA, 2, R.string.menu_ayuda)
+
+            // 5.3 QUÉ HACER SEGÚN LA OPCIÓN PULSADA
+            menu.setOnMenuItemClickListener { opcion ->
+                when (opcion.itemId) {
+                    MENU_ORDEN_CODIGO -> cambiarOrden(Ajustes.ORDEN_CODIGO)
+                    MENU_ORDEN_RECORRIDO -> cambiarOrden(Ajustes.ORDEN_RECORRIDO)
+                    MENU_AYUDA -> mostrarAyuda()
+                }
                 true
             }
             menu.show()
@@ -86,12 +109,29 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Mostrando ayuda")
     }
 
-    // RECARGAR: LEE LAS LÍNEAS DEL ALMACÉN Y ACTUALIZA LA LISTA DE LA PANTALLA
+    // CAMBIAR ORDEN: GUARDA LA PREFERENCIA Y REORDENA LA LISTA AL MOMENTO
+    private fun cambiarOrden(orden: String) {
+        Ajustes.guardarOrden(this, orden)   // 1. GUARDAR LA ELECCIÓN DEL USUARIO
+        recargarLista()                     // 2. VOLVER A PINTAR LA LISTA CON EL ORDEN NUEVO
+        Log.d(TAG, "Orden cambiado a: $orden")
+    }
+
+    // RECARGAR: LEE LAS LÍNEAS DEL ALMACÉN, LAS ORDENA SEGÚN LA PREFERENCIA Y ACTUALIZA LA PANTALLA
     private fun recargarLista() {
+        val guardadas = AlmacenLineas.leer(this)
+
+        // ORDENAR SEGÚN LO QUE ELIGIÓ EL USUARIO (PREFERENCIA GUARDADA EN Ajustes)
+        val orden = Ajustes.leerOrden(this)
+        val ordenadas = if (orden == Ajustes.ORDEN_RECORRIDO) {
+            guardadas.sortedBy { it.recorrido }   // A-Z POR RECORRIDO
+        } else {
+            guardadas.sortedBy { it.codigo }      // A-Z POR CÓDIGO
+        }
+
         lineas.clear()                                 // 1. VACIAR LA LISTA DE LA PANTALLA
-        lineas.addAll(AlmacenLineas.leer(this))        // 2. LLENARLA CON LO GUARDADO
+        lineas.addAll(ordenadas)                       // 2. LLENARLA CON LAS LÍNEAS YA ORDENADAS
         adapter.notifyDataSetChanged()                 // 3. AVISAR AL ADAPTADOR PARA QUE SE REDIBUJE
-        Log.d(TAG, "Lista recargada: ${lineas.size} líneas")
+        Log.d(TAG, "Lista recargada: ${lineas.size} líneas, orden: $orden")
     }
 
     //CICLO DE VIDA
