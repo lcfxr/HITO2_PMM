@@ -5,6 +5,6 @@ data class Linea(//HEMOS CREADO UNA CLASE LINEA EN EL ARCHIVO DONDE ESTA MAIN AC
     val codigo: String,//EL NUMERO DE LA LINEA
     val recorrido: String//EL RECORRIDO DE LA LINEA
 ){
-    // TEXTO DE CADA FILA DE LA LISTA: CÓDIGO Y RECORRIDO (ASÍ SE ENTIENDE EL ORDEN)
+    // LO QUE SE VE EN CADA FILA DE LA LISTA
     override fun toString(): String = "$codigo  ·  $recorrido"
 }

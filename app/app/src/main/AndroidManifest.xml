@@ -2,16 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- PERMISO PARA USAR INTERNET (CONSULTA HTTPS AL CONSORCIO DE TRANSPORTES) -->
+    <!-- PERMISO DE INTERNET -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- PERMISO PARA SABER SI HAY CONEXIÓN (WIFI O DATOS) ANTES DE DESCARGAR -->
+    <!-- PERMISO PARA MIRAR SI HAY CONEXION -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- PERMISOS DE UBICACIÓN (PELIGROSOS: ADEMÁS HAY QUE PEDIRLOS AL USUARIO EN EL CÓDIGO) -->
-    <!-- APROXIMADA: UNOS CIENTOS DE METROS (WIFI Y ANTENAS) -->
+    <!-- PERMISOS DE UBICACION (HAY QUE PEDIRLOS AL USUARIO) -->
+    <!-- APROXIMADA -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- PRECISA: UNOS METROS (GPS) -->
+    <!-- PRECISA -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ACT2_UD1">
 
-        <!-- PANTALLA DE INICIO: LA PRIMERA QUE SE ABRE -->
+        <!-- PANTALLA DE INICIO -->
         <activity
             android:name=".BienvenidaActivity"
             android:exported="true">
@@ -44,18 +44,18 @@
             android:name=".DetalleActivity"
             android:exported="false" />
 
-        <!-- FORMULARIO: adjustResize HACE SITIO AL TECLADO -->
+        <!-- FORMULARIO -->
         <activity
             android:name=".FormularioActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- LÍNEAS DEL CONSORCIO (CONSULTA HTTPS) -->
+        <!-- CONSORCIO -->
         <activity
             android:name=".ConsorcioActivity"
             android:exported="false" />
 
-        <!-- PARADA MÁS CERCANA (UBICACIÓN + PERMISO) -->
+        <!-- PARADA MAS CERCANA -->
         <activity
             android:name=".CercaActivity"
             android:exported="false" />

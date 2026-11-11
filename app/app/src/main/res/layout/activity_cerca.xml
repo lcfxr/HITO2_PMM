@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- PANTALLA PARADA MÁS CERCANA: PIDE PERMISO DE UBICACIÓN Y CALCULA LA PARADA -->
+<!-- PANTALLA PARADA MAS CERCANA -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,7 +7,7 @@
     android:layout_margin="16dp"
     android:fitsSystemWindows="true">
 
-    <!-- TÍTULO -->
+    <!-- TITULO -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,21 +16,21 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
 
-    <!-- EXPLICACIÓN (TRANSPARENCIA: PARA QUÉ SE USA LA UBICACIÓN) -->
+    <!-- EXPLICACION -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/texto_cerca"
         android:layout_marginBottom="24dp"/>
 
-    <!-- BOTÓN PRINCIPAL -->
+    <!-- BOTON BUSCAR -->
     <Button
         android:id="@+id/btnBuscarParada"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_buscar_parada"/>
 
-    <!-- RESULTADO O MENSAJE (PARADA / SIN PERMISO / BLOQUEADO / UBICACIÓN APAGADA) -->
+    <!-- RESULTADO -->
     <TextView
         android:id="@+id/tvResultado"
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
         android:padding="16dp"
         android:visibility="gone"/>
 
-    <!-- ABRIR AJUSTES: SOLO SI EL PERMISO ESTÁ BLOQUEADO -->
+    <!-- BOTON ABRIR AJUSTES -->
     <Button
         android:id="@+id/btnAbrirAjustes"
         android:layout_width="wrap_content"
@@ -49,13 +49,13 @@
         android:text="@string/btn_abrir_ajustes"
         android:visibility="gone"/>
 
-    <!-- HUECO QUE EMPUJA EL BOTÓN VOLVER ABAJO -->
+    <!-- HUECO -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <!-- VOLVER -->
+    <!-- BOTON VOLVER -->
     <Button
         android:id="@+id/btnVolverCerca"
         android:layout_width="match_parent"

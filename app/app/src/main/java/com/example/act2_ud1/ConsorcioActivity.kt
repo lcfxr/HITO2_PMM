@@ -18,15 +18,15 @@ import org.json.JSONObject
 import java.net.URI
 import javax.net.ssl.HttpsURLConnection
 
-// PANTALLA DEL CONSORCIO: DESCARGA LÍNEAS REALES POR HTTPS Y LAS MUESTRA
+// PANTALLA DEL CONSORCIO (LINEAS REALES POR HTTPS)
 class ConsorcioActivity : AppCompatActivity() {
 
     private val TAG = "PMDM"
 
-    // DIRECCIÓN DE LA API (HTTPS): CONSORCIO 1 = ÁREA DE SEVILLA
+    // URL DE LA API, EL 1 ES SEVILLA
     private val URL_LINEAS = "https://api.ctan.es/v1/Consorcios/1/lineas"
 
-    // PIEZAS DE LA PANTALLA (SE CONECTAN EN onCreate)
+    // PIEZAS DE LA PANTALLA
     private lateinit var etBuscar: EditText
     private lateinit var pbCargando: ProgressBar
     private lateinit var tvEstado: TextView
@@ -44,7 +44,7 @@ class ConsorcioActivity : AppCompatActivity() {
         btnReintentar = findViewById(R.id.btnReintentar)
         lvConsorcio = findViewById(R.id.lvConsorcio)
 
-        // 2. BUSCAR: CON EL BOTÓN, CON LA LUPA DEL TECLADO O CON REINTENTAR
+        // 2. BUSCAR (BOTON, TECLADO O REINTENTAR)
         findViewById<Button>(R.id.btnBuscar).setOnClickListener { buscar() }
         btnReintentar.setOnClickListener { buscar() }
         etBuscar.setOnEditorActionListener { _, accion, _ ->
@@ -56,46 +56,44 @@ class ConsorcioActivity : AppCompatActivity() {
             }
         }
 
-        // 3. VOLVER A MIS LÍNEAS
+        // 3. VOLVER
         findViewById<Button>(R.id.btnVolverConsorcio).setOnClickListener { finish() }
 
-        // 4. AL ABRIR LA PANTALLA, CARGAR TODAS LAS LÍNEAS
+        // 4. AL ENTRAR CARGO TODAS LAS LINEAS
         buscar()
     }
 
-    // ===== LA CONSULTA HTTPS =====
-
-    // BUSCAR: COMPRUEBA LA CONEXIÓN, DESCARGA EN SEGUNDO PLANO Y ENSEÑA EL ESTADO QUE TOQUE
+    // BUSCAR LINEAS
     private fun buscar() {
         val buscado = etBuscar.text.toString().trim()
 
-        // 1. SIN WIFI NI DATOS → ESTADO ERROR (NI SIQUIERA SE INTENTA DESCARGAR)
+        // 1. SI NO HAY INTERNET, ERROR
         if (!hayConexion()) {
             mostrarError(getString(R.string.error_sin_conexion))
             Log.d(TAG, "Sin conexión")
             return
         }
 
-        // 2. ESTADO CARGANDO
+        // 2. CARGANDO
         mostrarCargando()
 
-        // 3. HILO SECUNDARIO: LO QUE TARDA (INTERNET) NUNCA EN EL HILO PRINCIPAL
+        // 3. DESCARGO EN OTRO HILO PARA QUE NO SE BLOQUEE LA APP
         Thread {
             try {
-                val json = descargar(URL_LINEAS)          // 3.1 PEDIR LOS DATOS
-                val lineas = leerLineas(json, buscado)    // 3.2 LEER EL JSON Y FILTRAR
+                val json = descargar(URL_LINEAS)
+                val lineas = leerLineas(json, buscado)
 
-                // 4. VOLVER AL HILO PRINCIPAL PARA TOCAR LA PANTALLA
+                // 4. VUELVO AL HILO PRINCIPAL PARA CAMBIAR LA PANTALLA
                 runOnUiThread {
                     if (lineas.isEmpty()) {
-                        mostrarVacio(buscado)             // NINGUNA COINCIDE
+                        mostrarVacio(buscado)
                     } else {
-                        mostrarDatos(lineas)              // HAY RESULTADOS
+                        mostrarDatos(lineas)
                     }
                     Log.d(TAG, "Descarga correcta: ${lineas.size} líneas")
                 }
             } catch (e: Exception) {
-                // ALGO HA FALLADO (SERVIDOR CAÍDO, TIEMPO AGOTADO, JSON RARO…)
+                // SI ALGO FALLA, ERROR
                 Log.e(TAG, "Error al descargar", e)
                 runOnUiThread {
                     mostrarError(getString(R.string.error_descarga, e.message ?: e.javaClass.simpleName))
@@ -104,7 +102,7 @@ class ConsorcioActivity : AppCompatActivity() {
         }.start()
     }
 
-    // HAY CONEXIÓN: MIRA SI EL MÓVIL TIENE WIFI, DATOS O CABLE (SIN CONECTARSE TODAVÍA)
+    // MIRA SI HAY WIFI O DATOS
     private fun hayConexion(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val red = cm.activeNetwork ?: return false
@@ -114,31 +112,31 @@ class ConsorcioActivity : AppCompatActivity() {
                 capacidades.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
     }
 
-    // DESCARGAR: HACE LA PETICIÓN HTTPS Y DEVUELVE EL TEXTO DE LA RESPUESTA
+    // DESCARGAR LOS DATOS POR HTTPS
     private fun descargar(direccion: String): String {
         val conexion = URI(direccion).toURL().openConnection() as HttpsURLConnection
-        conexion.connectTimeout = 10000   // MÁXIMO 10 s PARA CONECTAR
-        conexion.readTimeout = 10000      // MÁXIMO 10 s PARA RECIBIR
+        conexion.connectTimeout = 10000   // 10 SEGUNDOS MAXIMO
+        conexion.readTimeout = 10000
         try {
             val codigo = conexion.responseCode
             if (codigo != HttpsURLConnection.HTTP_OK) {
-                throw Exception("HTTP $codigo")      // EL SERVIDOR HA RESPONDIDO, PERO CON ERROR
+                throw Exception("HTTP $codigo")
             }
             return conexion.inputStream.bufferedReader().use { it.readText() }
         } finally {
-            conexion.disconnect()                    // CERRAR SIEMPRE, HAYA IDO BIEN O MAL
+            conexion.disconnect()
         }
     }
 
-    // LEER: CONVIERTE EL JSON EN TEXTOS PARA LA LISTA Y SE QUEDA CON LOS QUE CONTIENEN LO BUSCADO
+    // LEER EL JSON Y QUEDARME CON LAS QUE COINCIDEN
     private fun leerLineas(json: String, buscado: String): List<String> {
         val resultado = mutableListOf<String>()
-        val array = JSONObject(json).getJSONArray("lineas")   // "lineas" SIN TILDE (NOMBRE REAL)
+        val array = JSONObject(json).getJSONArray("lineas")   // SIN TILDE, ASI VIENE EN LA API
         for (i in 0 until array.length()) {
             val obj = array.getJSONObject(i)
             val nombre = obj.optString("nombre")
             val operador = obj.optString("operadores").trim().trimEnd(',')
-            // SI NO SE HA ESCRITO NADA, TODAS; SI NO, SOLO LAS QUE CONTIENEN EL TEXTO
+            // SI NO ESCRIBO NADA, SALEN TODAS
             if (buscado.isEmpty() || nombre.contains(buscado, ignoreCase = true)) {
                 resultado.add("$nombre\n$operador")
             }
@@ -146,9 +144,9 @@ class ConsorcioActivity : AppCompatActivity() {
         return resultado
     }
 
-    // ===== LOS 4 ESTADOS DE LA PANTALLA: CADA UNO ENSEÑA SUS PIEZAS Y ESCONDE LAS DEMÁS =====
+    // LOS 4 ESTADOS DE LA PANTALLA
 
-    // ESTADO CARGANDO: CÍRCULO + "CARGANDO LÍNEAS…"
+    // CARGANDO
     private fun mostrarCargando() {
         pbCargando.visibility = View.VISIBLE
         tvEstado.visibility = View.VISIBLE
@@ -157,7 +155,7 @@ class ConsorcioActivity : AppCompatActivity() {
         lvConsorcio.visibility = View.GONE
     }
 
-    // ESTADO VACÍO: "NO HAY LÍNEAS QUE PASEN POR …"
+    // VACIO
     private fun mostrarVacio(buscado: String) {
         pbCargando.visibility = View.GONE
         tvEstado.visibility = View.VISIBLE
@@ -166,7 +164,7 @@ class ConsorcioActivity : AppCompatActivity() {
         lvConsorcio.visibility = View.GONE
     }
 
-    // ESTADO ERROR: MENSAJE + BOTÓN REINTENTAR
+    // ERROR
     private fun mostrarError(mensaje: String) {
         pbCargando.visibility = View.GONE
         tvEstado.visibility = View.VISIBLE
@@ -175,7 +173,7 @@ class ConsorcioActivity : AppCompatActivity() {
         lvConsorcio.visibility = View.GONE
     }
 
-    // ESTADO CON DATOS: SOLO LA LISTA
+    // CON DATOS
     private fun mostrarDatos(lineas: List<String>) {
         pbCargando.visibility = View.GONE
         tvEstado.visibility = View.GONE

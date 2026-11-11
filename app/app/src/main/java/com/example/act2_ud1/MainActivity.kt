@@ -16,23 +16,23 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = "PMDM"
 
-    // IDS DE LAS OPCIONES DEL MENÚ (PARA SABER CUÁL SE HA PULSADO)
+    // IDS DEL MENU
     private val MENU_ORDEN_CODIGO = 1
     private val MENU_ORDEN_RECORRIDO = 2
     private val MENU_AYUDA = 3
 
-    // LISTA QUE SE VE EN PANTALLA: EMPIEZA VACÍA Y SE RELLENA DESDE EL ALMACÉN
+    // LISTA DE LA PANTALLA
     private val lineas = mutableListOf<Linea>()
 
-    // ADAPTADOR: CONVIERTE CADA LÍNEA EN UNA FILA (SE CREA EN onCreate)
+    // ADAPTADOR
     private lateinit var adapter: ArrayAdapter<Linea>
 
-    // LANZADOR DEL FORMULARIO: LO ABRE Y ESPERA LA LÍNEA NUEVA
+    // ABRE EL FORMULARIO Y ESPERA A QUE SE GUARDE
     private val lanzadorFormulario = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { resultado ->
         if (resultado.resultCode == RESULT_OK) {
-            // EL FORMULARIO YA HA VALIDADO Y GUARDADO: SOLO AVISAMOS AL USUARIO
+            // SOLO AVISO DE QUE SE HA GUARDADO
             Toast.makeText(this, R.string.linea_guardada, Toast.LENGTH_SHORT).show()
             Log.d(TAG, "El formulario ha guardado una línea")
         } else {
@@ -55,26 +55,26 @@ class MainActivity : AppCompatActivity() {
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, lineas)
         lvLineas.adapter = adapter
 
-        // 3. AL TOCAR UNA LÍNEA, ABRIR EL DETALLE CON SUS DATOS
+        // 3. AL TOCAR UNA LINEA, ABRIR EL DETALLE
         lvLineas.setOnItemClickListener { _, _, position, _ ->
             val linea = lineas[position]
             val intent = Intent(this, DetalleActivity::class.java)
-            intent.putExtra(DetalleActivity.EXTRA_ID, linea.id) // SOLO EL ID: EL DETALLE BUSCA LA LÍNEA EN EL ALMACÉN
+            intent.putExtra(DetalleActivity.EXTRA_ID, linea.id)   // SOLO PASO EL ID
             Log.d(TAG, "Abriendo detalle de ${linea.codigo}")
             startActivity(intent)
         }
 
-        // 4. BOTÓN AÑADIR: ABRIR EL FORMULARIO
+        // 4. BOTON AÑADIR
         btnAnadir.setOnClickListener {
             lanzadorFormulario.launch(Intent(this, FormularioActivity::class.java))
         }
 
-        // 5. BOTÓN OPCIONES: MENÚ CON ORDENAR Y AYUDA
+        // 5. BOTON OPCIONES
         btnOpciones.setOnClickListener { boton ->
             val menu = PopupMenu(this, boton)
             val ordenActual = Ajustes.leerOrden(this)
 
-            // 5.1 OPCIONES DE ORDEN: SE MARCA CON ✓ LA QUE ESTÁ ELEGIDA
+            // 5.1 ORDENAR (SALE MARCADA LA ELEGIDA)
             val opCodigo = menu.menu.add(0, MENU_ORDEN_CODIGO, 0, R.string.menu_ordenar_codigo)
             opCodigo.isCheckable = true
             opCodigo.isChecked = (ordenActual == Ajustes.ORDEN_CODIGO)
@@ -83,10 +83,10 @@ class MainActivity : AppCompatActivity() {
             opRecorrido.isCheckable = true
             opRecorrido.isChecked = (ordenActual == Ajustes.ORDEN_RECORRIDO)
 
-            // 5.2 OPCIÓN DE AYUDA (LA DE SIEMPRE)
+            // 5.2 AYUDA
             menu.menu.add(0, MENU_AYUDA, 2, R.string.menu_ayuda)
 
-            // 5.3 QUÉ HACER SEGÚN LA OPCIÓN PULSADA
+            // 5.3 QUE HACE CADA OPCION
             menu.setOnMenuItemClickListener { opcion ->
                 when (opcion.itemId) {
                     MENU_ORDEN_CODIGO -> cambiarOrden(Ajustes.ORDEN_CODIGO)
@@ -98,18 +98,18 @@ class MainActivity : AppCompatActivity() {
             menu.show()
         }
 
-        // 6. BOTÓN CONSORCIO: ABRIR LA PANTALLA DE LÍNEAS REALES (CONSULTA HTTPS)
+        // 6. BOTON CONSORCIO
         findViewById<Button>(R.id.btnConsorcio).setOnClickListener {
             startActivity(Intent(this, ConsorcioActivity::class.java))
         }
 
-        // 7. BOTÓN PARADA MÁS CERCANA: ABRIR LA PANTALLA DE UBICACIÓN
+        // 7. BOTON PARADA MAS CERCANA
         findViewById<Button>(R.id.btnCerca).setOnClickListener {
             startActivity(Intent(this, CercaActivity::class.java))
         }
     }
 
-    // VENTANA DE AYUDA: EXPLICA CÓMO USAR LA LISTA
+    // VENTANA DE AYUDA
     private fun mostrarAyuda() {
         AlertDialog.Builder(this)
             .setTitle(R.string.titulo_ayuda)
@@ -119,28 +119,27 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Mostrando ayuda")
     }
 
-    // CAMBIAR ORDEN: GUARDA LA PREFERENCIA Y REORDENA LA LISTA AL MOMENTO
+    // CAMBIAR EL ORDEN Y GUARDARLO
     private fun cambiarOrden(orden: String) {
-        Ajustes.guardarOrden(this, orden)   // 1. GUARDAR LA ELECCIÓN DEL USUARIO
-        recargarLista()                     // 2. VOLVER A PINTAR LA LISTA CON EL ORDEN NUEVO
+        Ajustes.guardarOrden(this, orden)
+        recargarLista()
         Log.d(TAG, "Orden cambiado a: $orden")
     }
 
-    // RECARGAR: LEE LAS LÍNEAS DEL ALMACÉN, LAS ORDENA SEGÚN LA PREFERENCIA Y ACTUALIZA LA PANTALLA
+    // RECARGAR LA LISTA CON EL ORDEN ELEGIDO
     private fun recargarLista() {
         val guardadas = AlmacenLineas.leer(this)
 
-        // ORDENAR SEGÚN LO QUE ELIGIÓ EL USUARIO (PREFERENCIA GUARDADA EN Ajustes)
         val orden = Ajustes.leerOrden(this)
         val ordenadas = if (orden == Ajustes.ORDEN_RECORRIDO) {
-            guardadas.sortedBy { it.recorrido }   // A-Z POR RECORRIDO
+            guardadas.sortedBy { it.recorrido }
         } else {
-            guardadas.sortedBy { it.codigo }      // A-Z POR CÓDIGO
+            guardadas.sortedBy { it.codigo }
         }
 
-        lineas.clear()                                 // 1. VACIAR LA LISTA DE LA PANTALLA
-        lineas.addAll(ordenadas)                       // 2. LLENARLA CON LAS LÍNEAS YA ORDENADAS
-        adapter.notifyDataSetChanged()                 // 3. AVISAR AL ADAPTADOR PARA QUE SE REDIBUJE
+        lineas.clear()
+        lineas.addAll(ordenadas)
+        adapter.notifyDataSetChanged()
         Log.d(TAG, "Lista recargada: ${lineas.size} líneas, orden: $orden")
     }
 
@@ -154,7 +153,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "La app está en primer plano")
-        recargarLista() // CADA VEZ QUE VOLVEMOS A ESTA PANTALLA, LEER LO GUARDADO
+        recargarLista()   // CADA VEZ QUE VUELVO, LEO LO GUARDADO
     }
 
     override fun onPause() {

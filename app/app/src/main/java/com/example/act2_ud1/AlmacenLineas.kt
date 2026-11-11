@@ -5,18 +5,18 @@ import org.json.JSONArray
 import org.json.JSONObject
 import androidx.core.content.edit
 
-// ALMACÉN DE LÍNEAS: GUARDA Y LEE LAS LÍNEAS EN EL MÓVIL
+// AQUI SE GUARDAN LAS LINEAS EN EL MOVIL (SHAREDPREFERENCES + JSON)
 object AlmacenLineas {
 
     private const val ARCHIVO = "tupesa"
     private const val CLAVE = "lineas"
 
-    // LEER: DEVUELVE LAS LÍNEAS GUARDADAS
+    // LEER LAS LINEAS GUARDADAS
     fun leer(contexto: Context): MutableList<Linea> {
         val prefs = contexto.getSharedPreferences(ARCHIVO, Context.MODE_PRIVATE)
         val guardado = prefs.getString(CLAVE, null)
 
-        // PRIMERA VEZ QUE SE ABRE LA APP: NO HAY NADA GUARDADO → LÍNEAS DE EJEMPLO
+        // LA PRIMERA VEZ NO HAY NADA, ASI QUE PONGO LAS DE EJEMPLO
         if (guardado == null) {
             return mutableListOf(
                 Linea(1, "M-163", "Sevilla – Hospital San Juan"),
@@ -25,7 +25,7 @@ object AlmacenLineas {
             )
         }
 
-        // CONVERTIR EL TEXTO JSON EN UNA LISTA DE LÍNEAS
+        // PASAR EL JSON A LISTA
         val resultado = mutableListOf<Linea>()
         val array = JSONArray(guardado)
         for (i in 0 until array.length()) {
@@ -35,37 +35,37 @@ object AlmacenLineas {
         return resultado
     }
 
-    // AGREGAR: AÑADE UNA LÍNEA NUEVA Y LO GUARDA TODO
+    // AÑADIR UNA LINEA NUEVA
     fun agregar(contexto: Context, codigo: String, recorrido: String) {
         val lineas = leer(contexto)
-        val nuevoId = (lineas.maxOfOrNull { it.id } ?: 0) + 1   // ID NUEVO = EL MAYOR + 1
+        val nuevoId = (lineas.maxOfOrNull { it.id } ?: 0) + 1   // EL ID ES EL MAS ALTO + 1
         lineas.add(Linea(nuevoId, codigo, recorrido))
         guardar(contexto, lineas)
     }
 
-    // BUSCAR: DEVUELVE LA LÍNEA CON ESE ID (O null SI NO EXISTE)
+    // BUSCAR UNA LINEA POR SU ID
     fun buscar(contexto: Context, id: Int): Linea? {
         return leer(contexto).find { it.id == id }
     }
 
-    // EDITAR: CAMBIA EL CÓDIGO Y EL RECORRIDO DE LA LÍNEA CON ESE ID Y GUARDA
+    // EDITAR UNA LINEA
     fun editar(contexto: Context, id: Int, codigo: String, recorrido: String) {
         val lineas = leer(contexto)
-        val posicion = lineas.indexOfFirst { it.id == id }   // POSICIÓN EN LA LISTA (-1 SI NO ESTÁ)
+        val posicion = lineas.indexOfFirst { it.id == id }
         if (posicion != -1) {
-            lineas[posicion] = Linea(id, codigo, recorrido)   // MISMO ID, DATOS NUEVOS
+            lineas[posicion] = Linea(id, codigo, recorrido)
             guardar(contexto, lineas)
         }
     }
 
-    // BORRAR: QUITA LA LÍNEA CON ESE ID Y GUARDA
+    // BORRAR UNA LINEA
     fun borrar(contexto: Context, id: Int) {
         val lineas = leer(contexto)
-        lineas.removeAll { it.id == id }                     // QUITA LA QUE TENGA ESE ID
+        lineas.removeAll { it.id == id }
         guardar(contexto, lineas)
     }
 
-    // GUARDAR: CONVIERTE LA LISTA EN TEXTO JSON
+    // GUARDAR LA LISTA COMO JSON
     private fun guardar(contexto: Context, lineas: List<Linea>) {
         val array = JSONArray()
         for (linea in lineas) {

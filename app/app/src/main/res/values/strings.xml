@@ -44,7 +44,7 @@
     <!-- BIENVENIDA -->
     <string name="btn_ver_lineas">Ver líneas</string>
 
-    <!-- CONSORCIO (CONSULTA HTTPS) -->
+    <!-- CONSORCIO -->
     <string name="btn_consorcio">Líneas del Consorcio</string>
     <string name="titulo_consorcio">Líneas del Consorcio</string>
     <string name="fuente_consorcio">Datos reales: Consorcio de Transportes del Área de Sevilla</string>
@@ -56,7 +56,7 @@
     <string name="error_sin_conexion">Sin conexión. Activa el wifi o los datos y vuelve a intentarlo.</string>
     <string name="error_descarga">No se han podido descargar las líneas (%1$s)</string>
 
-    <!-- PARADA MÁS CERCANA (UBICACIÓN + PERMISO) -->
+    <!-- PARADA MAS CERCANA -->
     <string name="btn_cerca">Parada más cercana</string>
     <string name="titulo_cerca">Parada más cercana</string>
     <string name="texto_cerca">Usa tu ubicación para decirte qué parada de bus tienes más cerca. Tu ubicación no se guarda ni se muestra.</string>

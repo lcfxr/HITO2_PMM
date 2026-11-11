@@ -22,7 +22,7 @@ import android.os.Build
 import androidx.core.location.LocationManagerCompat
 import java.util.Locale
 
-// PANTALLA PARADA MÁS CERCANA: PIDE PERMISO DE UBICACIÓN Y CALCULA LA PARADA MÁS PRÓXIMA
+// PANTALLA DE LA PARADA MAS CERCANA
 class CercaActivity : AppCompatActivity() {
 
     private val TAG = "PMDM"
@@ -31,18 +31,17 @@ class CercaActivity : AppCompatActivity() {
     private lateinit var tvResultado: TextView
     private lateinit var btnAbrirAjustes: Button
 
-    // LOS DOS PERMISOS SE PIDEN JUNTOS: EL USUARIO ELIGE PRECISA O APROXIMADA
+    // PIDO LOS DOS PERMISOS A LA VEZ (PRECISA Y APROXIMADA)
     private val PERMISOS_UBICACION = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
-    // LANZADOR DEL PERMISO: ABRE LA VENTANA DEL SISTEMA Y RECIBE LA RESPUESTA DEL USUARIO
+    // AQUI LLEGA LO QUE RESPONDE EL USUARIO AL PERMISO
     private val lanzadorPermiso = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { respuesta ->
-        // respuesta ES UN MAPA: { PERMISO → true (SÍ) / false (NO) }
-        val concedido = respuesta.values.any { it }   // VALE CON QUE DÉ PRECISA O APROXIMADA
+        val concedido = respuesta.values.any { it }   // CON UNO DE LOS DOS VALE
         if (concedido) {
             Log.d(TAG, "Permiso de ubicación CONCEDIDO")
             buscarUbicacion()
@@ -66,7 +65,7 @@ class CercaActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnVolverCerca).setOnClickListener { finish() }
     }
 
-    // AL VOLVER DE AJUSTES: SI YA HAY PERMISO, ESCONDER EL BOTÓN "ABRIR AJUSTES"
+    // AL VOLVER DE AJUSTES, SI YA HAY PERMISO QUITO EL BOTON
     override fun onResume() {
         super.onResume()
         if (tienePermiso()) {
@@ -74,9 +73,7 @@ class CercaActivity : AppCompatActivity() {
         }
     }
 
-    // ===== EL FLUJO DEL PERMISO =====
-
-    // COMPROBAR: ¿YA HAY PERMISO? → BUSCAR. ¿YA DIJO QUE NO? → EXPLICAR. SI NO → PREGUNTAR
+    // SI HAY PERMISO BUSCO, SI YA DIJO QUE NO LE EXPLICO, Y SI NO LE PREGUNTO
     private fun comprobarPermiso() {
         when {
             tienePermiso() -> buscarUbicacion()
@@ -85,28 +82,28 @@ class CercaActivity : AppCompatActivity() {
         }
     }
 
-    // TIENE PERMISO: TRUE SI EL USUARIO YA DIO LA UBICACIÓN PRECISA O LA APROXIMADA
+    // MIRA SI TIENE ALGUNO DE LOS DOS PERMISOS
     private fun tienePermiso(): Boolean {
         return PERMISOS_UBICACION.any {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
     }
 
-    // EXPLICAR: VENTANA PROPIA CON EL MOTIVO, ANTES DE VOLVER A PREGUNTAR
+    // VENTANA PARA EXPLICAR POR QUE PIDO LA UBICACION
     private fun explicarPermiso() {
         AlertDialog.Builder(this)
             .setTitle(R.string.titulo_explicacion_permiso)
             .setMessage(R.string.texto_explicacion_permiso)
             .setPositiveButton(R.string.btn_continuar) { _, _ ->
-                lanzadorPermiso.launch(PERMISOS_UBICACION)   // AHORA SÍ, PREGUNTAR
+                lanzadorPermiso.launch(PERMISOS_UBICACION)
             }
             .setNegativeButton(R.string.btn_cancelar) { _, _ ->
-                atenderNegativa()                            // NO QUIERE NI QUE LE PREGUNTEN
+                atenderNegativa()
             }
             .show()
     }
 
-    // ATENDER LA NEGATIVA: LA APP SIGUE FUNCIONANDO. SI ESTÁ BLOQUEADO, SE OFRECE IR A AJUSTES
+    // SI DICE QUE NO, LA APP SIGUE FUNCIONANDO. SI ESTA BLOQUEADO SALE EL BOTON DE AJUSTES
     private fun atenderNegativa() {
         val sePuedeVolverAPreguntar =
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -117,27 +114,25 @@ class CercaActivity : AppCompatActivity() {
         }
     }
 
-    // ABRIR AJUSTES: LLEVA A LA PANTALLA DE AJUSTES DE ESTA APP PARA ACTIVAR EL PERMISO A MANO
+    // ABRIR LOS AJUSTES DE LA APP
     private fun abrirAjustes() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         intent.data = Uri.fromParts("package", packageName, null)
         startActivity(intent)
     }
 
-    // ===== LA UBICACIÓN =====
-
-    // BUSCAR UBICACIÓN: PIDE LA POSICIÓN ACTUAL AL SISTEMA Y LUEGO CALCULA LA PARADA MÁS CERCANA
-    @SuppressLint("MissingPermission")   // EL PERMISO YA SE HA COMPROBADO ANTES DE LLAMAR AQUÍ
+    // BUSCAR MI UBICACION
+    @SuppressLint("MissingPermission")
     private fun buscarUbicacion() {
         val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        // 1. ¿ESTÁ ENCENDIDA LA UBICACIÓN DEL MÓVIL?
+        // 1. MIRAR SI LA UBICACION ESTA ENCENDIDA
         if (!LocationManagerCompat.isLocationEnabled(lm)) {
             mostrarMensaje(getString(R.string.cerca_ubicacion_apagada), ajustes = false)
             return
         }
 
-        // 2. ELEGIR LA FUENTE: GPS SI HAY PERMISO PRECISO; SI NO, RED (WIFI Y ANTENAS)
+        // 2. GPS SI ES PRECISA, RED SI ES APROXIMADA
         val proveedor = if (tienePermisoPreciso() && lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             LocationManager.GPS_PROVIDER
         } else {
@@ -146,15 +141,15 @@ class CercaActivity : AppCompatActivity() {
 
         mostrarMensaje(getString(R.string.cerca_buscando), ajustes = false)
 
-        // 3. PEDIR LA POSICIÓN (LA RESPUESTA LLEGA UN POCO DESPUÉS, EN EL HILO PRINCIPAL)
+        // 3. PEDIR LA UBICACION
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // ANDROID 11 O MÁS: PIDE UNA POSICIÓN NUEVA
+                // ANDROID 11 O MAS
                 lm.getCurrentLocation(proveedor, null, mainExecutor) { ubicacion ->
                     mostrarParadaMasCercana(ubicacion)
                 }
             } else {
-                // MÓVILES MÁS ANTIGUOS: ÚLTIMA POSICIÓN CONOCIDA
+                // MOVILES MAS VIEJOS
                 mostrarParadaMasCercana(lm.getLastKnownLocation(proveedor))
             }
         } catch (e: Exception) {
@@ -163,29 +158,29 @@ class CercaActivity : AppCompatActivity() {
         }
     }
 
-    // ¿HAY PERMISO PRECISO? (EL USUARIO PUEDE HABER ELEGIDO SOLO EL APROXIMADO)
+    // MIRA SI EL PERMISO ES PRECISO
     private fun tienePermisoPreciso(): Boolean {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED
     }
 
-    // PARADA MÁS CERCANA: COMPARA LA UBICACIÓN CON TODAS LAS PARADAS Y SE QUEDA CON LA MENOR DISTANCIA
+    // BUSCAR LA PARADA MAS CERCANA
     private fun mostrarParadaMasCercana(ubicacion: Location?) {
-        // SI NO HA LLEGADO NINGUNA POSICIÓN
+        // SI NO HA LLEGADO LA UBICACION
         if (ubicacion == null) {
             mostrarMensaje(getString(R.string.cerca_sin_ubicacion), ajustes = false)
             return
         }
 
-        // BUSCAR EL MÍNIMO: EMPIEZO CON UNA DISTANCIA "INFINITA" Y ME QUEDO CON LA MENOR
+        // ME QUEDO CON LA QUE ESTE MAS CERCA
         var masCercana = Paradas.lista[0]
         var menorDistancia = Float.MAX_VALUE
-        val distancia = FloatArray(1)   // AQUÍ DEJA ANDROID EL RESULTADO EN METROS
+        val distancia = FloatArray(1)   // AQUI SE GUARDAN LOS METROS
 
         for (parada in Paradas.lista) {
             Location.distanceBetween(
-                ubicacion.latitude, ubicacion.longitude,   // DÓNDE ESTOY
-                parada.latitud, parada.longitud,           // DÓNDE ESTÁ LA PARADA
+                ubicacion.latitude, ubicacion.longitude,
+                parada.latitud, parada.longitud,
                 distancia
             )
             if (distancia[0] < menorDistancia) {
@@ -194,21 +189,19 @@ class CercaActivity : AppCompatActivity() {
             }
         }
 
-        // DISTANCIA EN TEXTO: METROS SI ES MENOS DE 1 KM; SI NO, KILÓMETROS CON UN DECIMAL
+        // METROS O KM
         val textoDistancia = if (menorDistancia < 1000) {
             "${menorDistancia.toInt()} m"
         } else {
             String.format(Locale.getDefault(), "%.1f km", menorDistancia / 1000)
         }
 
-        // SOLO SE ENSEÑA EL NOMBRE Y LA DISTANCIA: NUNCA LAS COORDENADAS (PRIVACIDAD)
+        // SOLO ENSEÑO EL NOMBRE Y LA DISTANCIA, NUNCA LAS COORDENADAS
         mostrarMensaje(getString(R.string.cerca_resultado, masCercana.nombre, textoDistancia), ajustes = false)
         Log.d(TAG, "Parada más cercana: ${masCercana.nombre} a $textoDistancia")
     }
 
-    // ===== MOSTRAR RESULTADOS =====
-
-    // MOSTRAR MENSAJE: PONE EL TEXTO Y ENSEÑA O ESCONDE EL BOTÓN DE AJUSTES
+    // MOSTRAR EL MENSAJE Y EL BOTON DE AJUSTES SI HACE FALTA
     private fun mostrarMensaje(texto: String, ajustes: Boolean) {
         tvResultado.visibility = View.VISIBLE
         tvResultado.text = texto

@@ -1,13 +1,13 @@
 package com.example.act2_ud1
 
-// PARADA DE AUTOBÚS CON SU POSICIÓN EN EL MAPA
+// PARADA CON SU POSICION
 data class Parada(
     val nombre: String,
-    val latitud: Double,   // NORTE-SUR
-    val longitud: Double   // ESTE-OESTE
+    val latitud: Double,
+    val longitud: Double
 )
 
-// PARADAS DE EJEMPLO DEL ÁREA DE SEVILLA (COORDENADAS APROXIMADAS DE LUGARES PÚBLICOS)
+// PARADAS DE EJEMPLO DE SEVILLA
 object Paradas {
     val lista = listOf(
         Parada("Sevilla – Plaza de Armas", 37.3911, -6.0029),
